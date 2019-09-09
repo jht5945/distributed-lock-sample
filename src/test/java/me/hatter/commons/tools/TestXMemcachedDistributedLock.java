@@ -2,7 +2,6 @@ package me.hatter.commons.tools;
 
 import me.hatter.commos.tool.DistributedLock;
 import me.hatter.commos.tool.impl.factory.XMemcachedDistributedLockFactory;
-import me.hatter.tools.commons.thread.ThreadUtil;
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.XMemcachedClient;
 
@@ -25,7 +24,9 @@ public class TestXMemcachedDistributedLock {
                     if (distributedLock.tryLock()) {
                         System.out.println("LOCK SUCCESS IN :" + System.currentTimeMillis());
                         try {
-                            ThreadUtil.sleep(10L);
+                            Thread.sleep(10L);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         } finally {
                             System.out.println("LOCK SUCCESS OUT:" + System.currentTimeMillis());
                             distributedLock.unLock();
