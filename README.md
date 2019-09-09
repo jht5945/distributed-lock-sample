@@ -11,7 +11,9 @@ Run memcached:
 $ memcached [-p <PORT>]
 ```
 
+<br>
 
-https://github.com/killme2008/xmemcached
-https://github.com/dustin/java-memcached-client
+Libraries:
+* https://github.com/killme2008/xmemcached
+* https://github.com/dustin/java-memcached-client
 
