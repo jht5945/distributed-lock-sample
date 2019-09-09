@@ -1,0 +1,88 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+def buildJSON = new groovy.json.JsonSlurper().parseText(new File("build.json").text)
+
+def baseProjectName = buildJSON?.project?.name ?: '__project_name__';
+def shellCommandName = baseProjectName
+def eclipseProjectName = baseProjectName
+def eclipseProjectComment = buildJSON?.project?.comment ?: '__project_name_comment__'
+def jarManifestMainClass = buildJSON?.project?.main ?: 'me.hatter.sample.SampleMain'
+
+archivesBaseName = buildJSON?.project?.archiveName ?: baseProjectName
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  // mavenCentral()
+  maven() { url 'https://maven.aliyun.com/repository/central' }
+  maven() { url 'https://hatter-repo.hatter.ink/a--Mwg2JHMcCrHj9MZBBptmR1PytP/repo/' }
+}
+
+tasks.withType(JavaCompile) {
+  options.encoding = "UTF-8"  
+}
+
+// '-x test' skip unit test
+defaultTasks 'packjar'
+
+task packjarsrc << {
+  ant.jar(destfile: "${baseProjectName}-sources.jar") {
+    fileset(dir: 'src/main/java', includes: '**/*.java')
+  }
+}
+packjarsrc.dependsOn build
+
+task packjar << {
+  def packtempclasses = "packtempclasses"
+  def libs = ant.path {
+     fileset(dir: 'build/libs', includes: '*.jar')
+  }
+  libs.list().each {
+    ant.unzip(dest: packtempclasses, src: it)
+  }
+  new File(packtempclasses + "/jar-version-build.txt").write(new Date().format("yyyyMMdd"), "UTF-8")
+  ant.jar(destfile: "${baseProjectName}.jar") {
+    fileset(dir: packtempclasses, includes: '**/*.*')
+  }
+  ant.delete(dir: packtempclasses)
+}
+packjar.dependsOn packjarsrc
+
+dependencies {
+    compile files(fileTree(dir: 'lib', includes: ['*.jar'], excludes: ['*-sources.jar', '*-javadoc.jar']))
+
+    if (buildJSON.repo != null && buildJSON.repo.dependencies != null) {
+        buildJSON.repo.dependencies.each {
+            compile("${it}")
+        }
+    }
+}
+
+eclipse {
+  project {
+    name = eclipseProjectName
+    comment = eclipseProjectComment
+  }
+  classpath {
+    defaultOutputDir = file('classes')
+    downloadSources = true
+    file {
+      whenMerged { classpath ->
+        classpath.entries.findAll { it.kind=='lib' }.each {
+          if ((it.path != null) && (it.sourcePath == null) && file(it.path.replace(".jar", "-sources.jar")).exists()) { 
+            it.sourcePath = getFileReferenceFactory().fromPath(it.path.replace(".jar", "-sources.jar"))
+          }
+        }
+      }
+    }
+  }
+}
+
+eclipseJdt << {
+  File f = file('.settings/org.eclipse.core.resources.prefs')
+  f.write('eclipse.preferences.version=1\n')
+  f.append('encoding/<project>=utf-8')
+}
+
