@@ -16,6 +16,9 @@ $ memcached [-p <PORT>]
 Code sample:
 
 ```java
+MemcachedClient client = new XMemcachedClient("127.0.0.1", 11211);
+XMemcachedDistributedLockFactory facotry = new XMemcachedDistributedLockFactory(client);
+
 DistributedLock distributedLock = facotry.createDistributedLock("a");
 if (distributedLock.tryLock()) {
     System.out.println("LOCK SUCCESS IN :" + System.currentTimeMillis());
