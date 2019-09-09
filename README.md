@@ -1,5 +1,8 @@
 # distributed-lock-sample
-Distributed lock sample
+
+Distributed lock using memcached/redis.
+
+<br>
 
 Install memcached on macOS:
 ```shell
