@@ -20,7 +20,7 @@ Code sample:
 
 ```java
 MemcachedClient client = new XMemcachedClient("127.0.0.1", 11211);
-XMemcachedDistributedLockFactory facotry = new XMemcachedDistributedLockFactory(client);
+DistributedLockFactory facotry = new XMemcachedDistributedLockFactory(client);
 
 DistributedLock distributedLock = facotry.createDistributedLock("a");
 if (distributedLock.tryLock()) {

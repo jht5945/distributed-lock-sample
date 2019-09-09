@@ -1,6 +1,7 @@
 package me.hatter.commons.tools;
 
 import me.hatter.commos.tool.DistributedLock;
+import me.hatter.commos.tool.DistributedLockFactory;
 import me.hatter.commos.tool.impl.factory.XMemcachedDistributedLockFactory;
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.XMemcachedClient;
@@ -12,7 +13,7 @@ public class TestXMemcachedDistributedLock {
 
     public static void main(String[] args) throws Exception {
         MemcachedClient client = new XMemcachedClient("127.0.0.1", 11211);
-        XMemcachedDistributedLockFactory facotry = new XMemcachedDistributedLockFactory(client);
+        DistributedLockFactory facotry = new XMemcachedDistributedLockFactory(client);
 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
 
