@@ -13,7 +13,7 @@ public class TestXMemcachedDistributedLock {
 
     public static void main(String[] args) throws Exception {
         MemcachedClient client = new XMemcachedClient("127.0.0.1", 11211);
-        DistributedLockFactory facotry = new XMemcachedDistributedLockFactory(client);
+        DistributedLockFactory factory = new XMemcachedDistributedLockFactory(client);
 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
 
@@ -21,7 +21,7 @@ public class TestXMemcachedDistributedLock {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    DistributedLock distributedLock = facotry.createDistributedLock("a");
+                    DistributedLock distributedLock = factory.createDistributedLock("a");
                     if (distributedLock.tryLock()) {
                         System.out.println("LOCK SUCCESS IN :" + System.currentTimeMillis());
                         try {

@@ -20,9 +20,9 @@ Code sample:
 
 ```java
 MemcachedClient client = new XMemcachedClient("127.0.0.1", 11211);
-DistributedLockFactory facotry = new XMemcachedDistributedLockFactory(client);
+DistributedLockFactory factory = new XMemcachedDistributedLockFactory(client);
 
-DistributedLock distributedLock = facotry.createDistributedLock("a");
+DistributedLock distributedLock = factory.createDistributedLock("a");
 if (distributedLock.tryLock()) {
     System.out.println("LOCK SUCCESS IN :" + System.currentTimeMillis());
     try {
