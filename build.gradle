@@ -17,7 +17,6 @@ targetCompatibility = 1.8
 repositories {
   // mavenCentral()
   maven() { url 'https://maven.aliyun.com/repository/central' }
-  maven() { url 'https://hatter-repo.hatter.ink/a--Mwg2JHMcCrHj9MZBBptmR1PytP/repo/' }
 }
 
 tasks.withType(JavaCompile) {
